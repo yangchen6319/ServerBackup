@@ -51,7 +51,14 @@ def embedding(sentences, labels, word2idx):
     return inputs, targets
 
 
-df_data = load_data('train')
-text1 = str(df_data.iloc[0, 1])
-result = revise_sentence(text1, 14, ['<PAD>'])
-print(result)
+def make_data(sentences, labels, word2idx):
+    inputs = []
+    for sen in sentences:
+        inputs.append([word2idx[n] for n in sen.split()])
+
+    targets = []
+    for out in labels:
+        targets.append(float(out))
+    return inputs, targets
+
+
