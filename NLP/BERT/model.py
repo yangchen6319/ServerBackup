@@ -18,7 +18,11 @@ class ClassifierModel(nn.Module):
 
         self.dropout_layer = nn.Dropout(dropout_prob)
         out_dims = self.bert_config.hidden_size
-        self.obj_classifier = nn.Linear(out_dims, 2)
+        self.classifier = nn.Sequential(
+            nn.Linear(out_dims, 100),
+            nn.ReLU(),
+            nn.Linear(100, 5)
+        )
 
     def forward(self, input_ids, input_mask, segment_ids, label_id=None):
 
@@ -29,5 +33,5 @@ class ClassifierModel(nn.Module):
         seq_out, pooled_out = bert_outputs[0], bert_outputs[1]
         # 对反向传播及逆行截断
         x = pooled_out.detach()
-        out = self.obj_classifier(x)
+        out = self.classifier(x)
         return out
